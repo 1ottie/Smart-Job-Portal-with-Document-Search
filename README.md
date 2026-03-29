@@ -2,7 +2,7 @@ Gõ npm install (để tải thư viện).
 
 Sửa file .env.example -> .env và điền tài khoản MySQL vào.
 
-Điền tài khoản MySQL vào file db.js và User.js
+Điền tài khoản MySQL vào file db.js và init-db.js
 
 Gõ npm run db:init (Database và bảng được tạo tự động).
 
