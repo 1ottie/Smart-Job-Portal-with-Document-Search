@@ -1,7 +1,8 @@
 import mysql from "mysql2/promise";
 import "dotenv/config";
 import { createUserTable } from "../models/User.js";
-// Import các bảng khác ở đây...
+import { createCompanyTable } from "../models/Company.js";
+import { createJobTable } from "../models/Job.js";
 
 async function setupDatabase() {
   let connection;
@@ -11,8 +12,8 @@ async function setupDatabase() {
     // 1. Tạo kết nối KHÔNG KHAI BÁO DATABASE NAME
     connection = await mysql.createConnection({
       host: process.env.DB_HOST || "localhost",
-      user: process.env.DB_USER || "", // Điền username
-      password: process.env.DB_PASS || "", // Điền password
+      user: process.env.DB_USER || "ntquang",
+      password: process.env.DB_PASS || "ntquang13@",
     });
 
     const dbName = process.env.DB_NAME || "job_portal";
@@ -32,7 +33,8 @@ async function setupDatabase() {
     // 4. Truyền biến connection này vào các hàm tạo bảng
     // Biến connection này hoàn toàn có method .query() y hệt như biến pool
     await createUserTable(connection);
-    // await createCompanyTable(connection);
+    await createCompanyTable(connection);
+    await createJobTable(connection);
 
     console.log("🎉 KHỞI TẠO CƠ SỞ DỮ LIỆU HOÀN TẤT!");
     process.exit(0);
