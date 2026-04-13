@@ -4,7 +4,7 @@ import express from "express";
 import cors from "cors";
 import authRoutes from "./routes/auth.js";
 import userRoutes from "./routes/users.js";
-import cvRoutes from "./routes/cv.js";
+import cvRoutes from "./routes/cvs.js";
 import jobRoutes from "./routes/jobs.js";
 import searchRoutes from "./routes/searchRoutes.js";
 

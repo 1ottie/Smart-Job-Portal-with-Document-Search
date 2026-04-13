@@ -15,11 +15,14 @@
   "dependencies": {
     "@elastic/elasticsearch": "^9.3.4",
     "bcryptjs": "^3.0.3",
+    "bullmq": "^5.73.5",
     "cors": "^2.8.6",
-    "dotenv": "^17.4.1",
+    "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",
+    "multer": "^2.1.1",
     "mysql2": "^3.20.0",
+    "pdf2json": "^4.0.2",
     "uuid": "^13.0.0"
   },
   "devDependencies": {

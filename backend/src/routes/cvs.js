@@ -1,7 +1,7 @@
 import express from "express";
 import pool from "../libs/db.js";
 import client from "../libs/elasticsearch.js";
-import verifyToken from "../middlewares/auth.js";
+import verifyToken from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
