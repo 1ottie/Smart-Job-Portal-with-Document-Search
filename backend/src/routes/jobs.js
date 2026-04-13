@@ -1,29 +1,34 @@
 import express from "express";
-import {
-  createJob,
-  getJobs,
-  getJobById,
-  updateJob,
-  deleteJob,
-} from "../controllers/jobController.js";
-import verifyToken from "../middlewares/authMiddleware.js";
-import { isRecruiter } from "../middlewares/roleMiddleware.js";
+import pool from "../libs/db.js";
+import client from "../libs/elasticsearch.js";
+import verifyToken from "../middlewares/auth.js";
 
 const router = express.Router();
 
-// Tạo job bắt buộc phải là Recruiter
-router.post("/", verifyToken, isRecruiter, createJob);
+// POST /api/jobs
+router.post("/", verifyToken, async (req, res) => {
+    try {
+        const { title, description, skills_required, location } = req.body;
+        const recruiterId = req.user.id;
 
-// Lấy danh sách job (Public)
-router.get("/", getJobs);
+        // Lưu vào MySQL
+        const [result] = await pool.query(
+            "INSERT INTO jobs (title, description, skills_required, location, recruiterId) VALUES (?, ?, ?, ?, ?)",
+            [title, description, skills_required, location, recruiterId]
+        );
+        const jobId = result.insertId;
 
-// Lấy chi tiết 1 job (Public - Mọi người đều có thể xem chi tiết job)
-router.get("/:id", getJobById);
+        // Index vào Elasticsearch
+        await client.index({
+            index: "jobs",
+            document: { id: jobId, title, description, skills_required, location }
+        });
 
-// Cập nhật job (Cần token + Phải là Recruiter)
-router.put("/:id", verifyToken, isRecruiter, updateJob);
-
-// Xoá job (Cần token + Phải là Recruiter)
-router.delete("/:id", verifyToken, isRecruiter, deleteJob);
+        res.status(201).json({ message: "Job đã được đăng thành công" });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Internal server error" });
+    }
+});
 
 export default router;

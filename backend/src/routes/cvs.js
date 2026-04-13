@@ -1,17 +1,33 @@
 import express from "express";
-import multer from "multer";
-import { uploadCV, getCVs, getCVById } from "../controllers/cvController.js";
-import verifyToken from "../middlewares/authMiddleware.js";
+import pool from "../libs/db.js";
+import client from "../libs/elasticsearch.js";
+import verifyToken from "../middlewares/auth.js";
 
 const router = express.Router();
 
-// Cấu hình Multer: Lưu file vào thư mục 'uploads/' ở thư mục gốc
-const upload = multer({ dest: "uploads/" });
+// POST /api/cv
+router.post("/", verifyToken, async (req, res) => {
+    try {
+        const { skills, experience, education, location } = req.body;
+        const candidateId = req.user.id;
 
-// API Upload file: Dùng 'upload.single("file")' để hứng 1 file từ field có tên là 'file'
-router.post("/upload", verifyToken, upload.single("file"), uploadCV);
+        // Lưu vào MySQL
+        await pool.query(
+            "INSERT INTO candidates (userId, skills, experience, education, location) VALUES (?, ?, ?, ?, ?)",
+            [candidateId, skills, experience, education, location]
+        );
 
-router.get("/", verifyToken, getCVs);
-router.get("/:id", verifyToken, getCVById);
+        // Index vào Elasticsearch
+        await client.index({
+            index: "candidates",
+            document: { id: candidateId, skills, experience, education, location }
+        });
+
+        res.status(201).json({ message: "CV đã được nộp thành công" });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Internal server error" });
+    }
+});
 
 export default router;
