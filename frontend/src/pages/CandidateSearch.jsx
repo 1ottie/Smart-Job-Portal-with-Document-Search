@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./Dashboard.css";
-import logo from "../assets/logo1.1.png";
+import logo from "../assets/logo.png";
 
 function CandidateSearch() {
   const navigate = useNavigate();
