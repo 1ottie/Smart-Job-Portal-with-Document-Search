@@ -8,6 +8,14 @@ Gõ npm run db:init để tạo database
 
 Gõ npm run dev để khởi động backend
 
+Tải Docker về máy ở link sau: https://www.docker.com/
+
+Bật Docker.exe trên máy lên
+
+Vào backend, gõ npm install @elastic/elasticsearch@8.15.0
+
+Ở thư mục chính của project gõ: docker compose up -d
+
 Tạo terminal mới, gõ lệnh node .\src\workers\cvWorker.js để khởi động bullmq
 
 Tạo terminal mới, vào thư mục frontend gõ lệnh npm install để cài đặt các thư viện cần thiết
